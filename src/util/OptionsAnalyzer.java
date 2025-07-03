@@ -2,7 +2,6 @@ package util;
 
 import model.Options;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,7 +14,7 @@ public class OptionsAnalyzer {
                     "|(?<short>-s\\b)" +
                     "|(?<append>-a\\b)" +
                     "|(-o\\s(?<path>(?:([/\\\\])\\w+)+\\b))" +
-                    "|(?:-p\\s(?<prefix>\\w+[_-]*))" +
+                    "|(-p\\s(?<prefix>\\w+[_-]*))" +
                     "|(?<filename>\\w+.txt)";
 
     private OptionsAnalyzer() {
@@ -59,12 +58,12 @@ public class OptionsAnalyzer {
     private static Options buildOptions(boolean isShort, boolean isFull, boolean needAppend, String prefix,
                                         String pathToFile, List<String> filesToRead) {
         return Options.builder()
-                      .isShort(isShort)
-                      .isFull(isFull)
-                      .needAppend(needAppend)
-                      .prefix(prefix)
-                      .pathToFile(pathToFile)
-                      .filesToRead(filesToRead)
-                      .build();
+                .isShort(isShort)
+                .isFull(isFull)
+                .needAppend(needAppend)
+                .prefix(prefix)
+                .pathToFile(pathToFile)
+                .filesToRead(filesToRead)
+                .build();
     }
 }

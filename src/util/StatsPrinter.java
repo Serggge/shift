@@ -66,7 +66,7 @@ public class StatsPrinter {
             min = Math.min(min, doubleValue);
             sum+= doubleValue;
         }
-        System.out.printf("Max: %f, Min: %f, Sum: %f, Average: %f\n", max, min, sum, (sum / floats.size()));
+        System.out.printf("Float statistic:\nMax: %f, Min: %f, Sum: %f, Average: %f\n", max, min, sum, (sum / floats.size()));
     }
 
     private static void printForIntegerContent(List<String> ints) {
@@ -79,7 +79,7 @@ public class StatsPrinter {
             min = Math.min(min, intValue);
             sum+= intValue;
         }
-        System.out.printf("Max: %d, Min: %d, Sum: %d, Average: %f\n", max, min, sum, ((double) sum / ints.size()));
+        System.out.printf("Integer statistic:\nMax: %d, Min: %d, Sum: %d, Average: %f\n", max, min, sum, ((double) sum / ints.size()));
     }
 
     private static void printForStringContent(List<String> strings) {
@@ -89,7 +89,7 @@ public class StatsPrinter {
             longest = Math.max(longest, line.length());
             shortest = Math.min(shortest, line.length());
         }
-        System.out.printf("Longest string: %d, Shortest string: %d\n", longest, shortest);
+        System.out.printf("String statistic:\nLongest string: %d, Shortest string: %d\n", longest, shortest);
     }
 
 }

@@ -24,10 +24,8 @@ public class ProjectFileWriter {
         Path pathToFile = createSubDirectories(options.getPathToFile());
 
         for (TypeAlias type : content.keySet()) {
-            if (!content.get(type)
-                        .isEmpty()) {
-                String fullFileName = prefix + type.toString()
-                                                   .toLowerCase() + ".txt";
+            if (!content.get(type).isEmpty()) {
+                String fullFileName = prefix + type.toString().toLowerCase() + ".txt";
                 Path fullPath = pathToFile.resolve(fullFileName);
                 OpenOption appendOption = needAppend ? StandardOpenOption.APPEND : StandardOpenOption.WRITE;
                 writeToFile(fullPath, content.get(type), StandardOpenOption.CREATE, appendOption);
