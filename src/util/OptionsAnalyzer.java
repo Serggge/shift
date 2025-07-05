@@ -12,12 +12,12 @@ import java.util.regex.Pattern;
 public class OptionsAnalyzer {
 
     private static final String OPTIONS_PATTERN =
-            "(?:^|\\s)(?<full>-f\\b)" +
-                    "|(?:^|\\s)(?<short>-s\\b)" +
-                    "|(?:^|\\s)(?<append>-a\\b)" +
-                    "|(?:^|\\s)(-o\\s(?<path>(?:([/\\\\])\\w+)+))\\b" +
-                    "|(?:^|\\s)(-p\\s(?<prefix>\\w+[_-]*))\\b" +
-                    "|(?:^|\\s)(?<filename>\\w+.txt\\b)";
+                    "(?<full>-f\\b)" +
+                    "|(?<short>-s\\b)" +
+                    "|(?<append>-a\\b)" +
+                    "|(-o\\s(?<path>(?:/\\w+)+))" +
+                    "|(-p\\s(?<prefix>\\w+[_-]?))" +
+                    "|(?<filename>\\w+.txt)";
 
     private OptionsAnalyzer() {
     }
@@ -35,29 +35,24 @@ public class OptionsAnalyzer {
         while (true) {
             try {
                 while (matcher.find()) {
-                    try {
-                        String match = matcher.group();
-                        System.out.println(match);
-                        if ("-s".equals(match)) {
-                            isShort = true;
-                        } else if ("-f".equals(match)) {
-                            isFull = true;
-                        } else if ("-a".equals(match)) {
-                            needAppend = true;
-                        } else if (match.startsWith("-p ")) {
-                            prefix = matcher.group("prefix");
-                        } else if (match.startsWith("-o ")) {
-                            pathToFile = matcher.group("path");
-                        } else if (match.endsWith(".txt")) {
-                            filesToRead.add(matcher.group("filename"));
-                        } else {
-                            throw new UnknownParameterException("Unknown parameter: " + match);
-                        }
-                    } catch (RuntimeException exception) {
-                        throw new UnknownParameterException("Can't recognize the line: " + matcher.group());
+                    String match = matcher.group();
+                    if ("-s".equals(match)) {
+                        isShort = true;
+                    } else if ("-f".equals(match)) {
+                        isFull = true;
+                    } else if ("-a".equals(match)) {
+                        needAppend = true;
+                    } else if (match.startsWith("-p ")) {
+                        prefix = matcher.group("prefix");
+                    } else if (match.startsWith("-o ")) {
+                        pathToFile = matcher.group("path");
+                    } else if (match.endsWith(".txt")) {
+                        filesToRead.add(matcher.group("filename"));
+                    } else {
+                        throw new UnknownParameterException("Unknown parameter: " + match);
                     }
                 }
-            } catch (UnknownParameterException exception) {
+            } catch (RuntimeException exception) {
                 printErrorMessage(exception.getMessage());
                 Scanner scanner = new Scanner(System.in);
                 String userInput = scanner.nextLine();
@@ -71,25 +66,27 @@ public class OptionsAnalyzer {
     }
 
     private static void printErrorMessage(String errorMessage) {
-        System.out.println(errorMessage + "\nThe following parameters apply:\n" +
-                "-s : to display short statistics\n" +
-                "-f : to display full statistics\n" +
-                "-a : if need to append data to file\n" +
-                "-p <prefix> : sets the prefix for the resulting files\n" +
-                "-o <path> : specifies the path to the location of the resulting files\n" +
-                "file1.txt file2.txt <more> : list text files which need to read and sort data\n" +
-                "Try again:");
+        System.out.println(errorMessage);
+        System.out.println("""
+                The following parameters apply:
+                -s : to display short statistics
+                -f : to display full statistics
+                -a : if need to append data to file
+                -p <prefix> : sets the prefix for the resulting files
+                -o <path> : specifies the path to the location of the resulting files
+                file1.txt file2.txt <more> : list text files which need to read and sort data
+                """);
     }
 
     private static Options buildOptions(boolean isShort, boolean isFull, boolean needAppend, String prefix,
                                         String pathToFile, List<String> filesToRead) {
         return Options.builder()
-                .isShort(isShort)
-                .isFull(isFull)
-                .needAppend(needAppend)
-                .prefix(prefix)
-                .pathToFile(pathToFile)
-                .filesToRead(filesToRead)
-                .build();
+                      .isShort(isShort)
+                      .isFull(isFull)
+                      .needAppend(needAppend)
+                      .prefix(prefix)
+                      .pathToFile(pathToFile)
+                      .filesToRead(filesToRead)
+                      .build();
     }
 }

@@ -2,7 +2,7 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-.idea
+.idea/
 .gitignore
 
 ### Eclipse ###
@@ -29,3 +29,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### libraries ###
+/lib/

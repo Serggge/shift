@@ -5,12 +5,12 @@ import java.util.List;
 
 public class Options {
 
-    boolean isFull;
-    boolean isShort;
-    boolean needAppend;
-    String prefix;
-    String pathToFile;
-    List<String> filesToRead;
+    private final boolean isFull;
+    private final boolean isShort;
+    private final boolean needAppend;
+    private final String  prefix;
+    private final String pathToFile;
+    private final List<String> filesToRead;
 
     private Options(Builder builder) {
         this.isFull = builder.isFull;
@@ -50,12 +50,12 @@ public class Options {
     }
 
     public static class Builder {
-        boolean isFull;
-        boolean isShort;
-        boolean needAppend;
-        String prefix;
-        String pathToFile;
-        List<String> filesToRead;
+        private boolean isFull;
+        private boolean isShort;
+        private boolean needAppend;
+        private String prefix;
+        private String pathToFile;
+        private List<String> filesToRead;
 
         public Builder isFull(boolean isFull) {
             this.isFull = isFull;

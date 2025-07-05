@@ -17,18 +17,21 @@ public class ProjectFileWriter {
     private ProjectFileWriter() {
     }
 
-    public static void writeData(Map<TypeAlias, List<String>> content, Options options) {
+    public static void writeData(Map<TypeAlias, List<String>> filesContent, Options options) {
         String prefix = options.getPrefix();
         boolean needAppend = options.isNeedAppend();
-
         Path pathToFile = createSubDirectories(options.getPathToFile());
 
-        for (TypeAlias type : content.keySet()) {
-            if (!content.get(type).isEmpty()) {
-                String fullFileName = prefix + type.toString().toLowerCase() + ".txt";
+        for (TypeAlias fileType : filesContent.keySet()) {
+            if (!filesContent.get(fileType).isEmpty()) {
+                String fullFileName = prefix + fileType.toString().toLowerCase() + ".txt";
                 Path fullPath = pathToFile.resolve(fullFileName);
-                OpenOption appendOption = needAppend ? StandardOpenOption.APPEND : StandardOpenOption.WRITE;
-                writeToFile(fullPath, content.get(type), StandardOpenOption.CREATE, appendOption);
+
+                if (needAppend) {
+                    writeToFile(fullPath, filesContent.get(fileType), StandardOpenOption.APPEND);
+                } else {
+                    writeToFile(fullPath, filesContent.get(fileType));
+                }
             }
         }
     }
@@ -42,15 +45,14 @@ public class ProjectFileWriter {
     }
 
     private static Path createSubDirectories(String pathToFile) {
-        Path newPath = Path.of("");
         if (!pathToFile.isBlank()) {
             String[] directories = pathToFile.split("/");
             try {
                 return Files.createDirectories(Path.of("", directories));
             } catch (IOException e) {
-                System.out.println("Can't create directories tree: " + pathToFile);
+                System.out.printf("Can't create directories tree: %s. Files will be write to the current directory\n", pathToFile);
             }
         }
-        return newPath;
+        return Path.of("");
     }
 }
