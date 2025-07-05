@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class DataSorter {
 
-    private static final String FLOAT_PATTERN = "^(-?\\d+\\.\\d+(E[-+]\\d+)?)$";
+    private static final String FLOAT_PATTERN = "^(-?\\d+\\.\\d+([Ee][-+]?\\d+)?)$";
     private static final String INTEGER_PATTERN = "^(-?\\d+)$";
     private static final String STRING_PATTERN = "^(.*[A-Za-zА-ЯЁа-яё]{2,}.*$)";
 

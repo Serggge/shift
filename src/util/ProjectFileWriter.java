@@ -28,9 +28,9 @@ public class ProjectFileWriter {
                 Path fullPath = pathToFile.resolve(fullFileName);
 
                 if (needAppend) {
-                    writeToFile(fullPath, filesContent.get(fileType), StandardOpenOption.APPEND);
+                    writeToFile(fullPath, filesContent.get(fileType), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 } else {
-                    writeToFile(fullPath, filesContent.get(fileType));
+                    writeToFile(fullPath, filesContent.get(fileType), StandardOpenOption.CREATE);
                 }
             }
         }
