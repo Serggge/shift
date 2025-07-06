@@ -14,13 +14,14 @@ import java.util.Scanner;
 
 public class ProjectFileReader {
 
+    private static String pathToFile = "";
+
     private ProjectFileReader() {
     }
 
     public static Map<String, List<String>> readByOptions(Options options) {
         Map<String, List<String>> allFilesContent = new LinkedHashMap<>();
         List<String> fileList = options.getFileList();
-        String pathToFile = "";
 
         for (String fileName : fileList) {
             boolean needBreak = false;

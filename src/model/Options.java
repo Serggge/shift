@@ -1,29 +1,35 @@
 package model;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Options {
 
-    private final boolean isFull;
-    private final boolean isShort;
-    private final boolean needAppend;
-    private final String  prefix;
-    private final String pathToFile;
+    private boolean isFull;
+    private boolean isShort;
+    private boolean needAppend;
+    private String  prefix;
+    private String pathToResult;
     private final List<String> filesToRead;
 
-    private Options(Builder builder) {
-        this.isFull = builder.isFull;
-        this.isShort = builder.isShort;
-        this.needAppend = builder.needAppend;
-        this.prefix = builder.prefix;
-        this.pathToFile = builder.pathToFile;
-        this.filesToRead = builder.filesToRead;
+    private Options(boolean isFull, boolean isShort, boolean needAppend, String prefix, String pathToResult, List<String> filesToRead) {
+        this.isFull = isFull;
+        this.isShort = isShort;
+        this.needAppend = needAppend;
+        this.prefix = prefix;
+        this.pathToResult = pathToResult;
+        this.filesToRead = filesToRead;
+    }
+
+    public static Options defaultOptions() {
+        return new Options(false, false, false, "", "", new LinkedList<>());
     }
 
     public List<String> getFileList() {
         return Collections.unmodifiableList(filesToRead);
     }
+
 
     public boolean isFull() {
         return isFull;
@@ -41,54 +47,31 @@ public class Options {
         return prefix;
     }
 
-    public String getPathToFile() {
-        return pathToFile;
+    public String getPathToResult() {
+        return pathToResult;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public void setFull(boolean full) {
+        isFull = full;
     }
 
-    public static class Builder {
-        private boolean isFull;
-        private boolean isShort;
-        private boolean needAppend;
-        private String prefix;
-        private String pathToFile;
-        private List<String> filesToRead;
+    public void setShort(boolean aShort) {
+        isShort = aShort;
+    }
 
-        public Builder isFull(boolean isFull) {
-            this.isFull = isFull;
-            return this;
-        }
+    public void setNeedAppend(boolean needAppend) {
+        this.needAppend = needAppend;
+    }
 
-        public Builder isShort(boolean isShort) {
-            this.isShort =isShort;
-            return this;
-        }
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 
-        public Builder needAppend(boolean needAppend) {
-            this.needAppend = needAppend;
-            return this;
-        }
+    public void setPathToResult(String pathToResult) {
+        this.pathToResult = pathToResult;
+    }
 
-        public Builder prefix(String prefix) {
-            this.prefix = prefix;
-            return this;
-        }
-
-        public Builder pathToFile(String pathToFile) {
-            this.pathToFile = pathToFile;
-            return this;
-        }
-
-        public Builder filesToRead(List<String> filesToRead) {
-            this.filesToRead = filesToRead;
-            return this;
-        }
-
-        public Options build() {
-            return new Options(this);
-        }
+    public void addFileToRead(String fileName) {
+        filesToRead.add(fileName);
     }
 }

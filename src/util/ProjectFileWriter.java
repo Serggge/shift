@@ -20,7 +20,7 @@ public class ProjectFileWriter {
     public static void writeData(Map<TypeAlias, List<String>> filesContent, Options options) {
         String prefix = options.getPrefix();
         boolean needAppend = options.isNeedAppend();
-        Path pathToFile = createSubDirectories(options.getPathToFile());
+        Path pathToFile = createSubDirectories(options.getPathToResult());
 
         for (TypeAlias fileType : filesContent.keySet()) {
             if (!filesContent.get(fileType).isEmpty()) {

@@ -3,8 +3,6 @@ package util;
 import exception.UnknownParameterException;
 import model.Options;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,55 +16,57 @@ public class OptionsAnalyzer {
                     "|(-o\\s(?<path>(?:/\\w+)+))" +
                     "|(-p\\s(?<prefix>\\w+[_-]?))" +
                     "|(?<filename>\\w+.txt)";
+    private static final Pattern pattern = Pattern.compile(OPTIONS_PATTERN);
 
     private OptionsAnalyzer() {
     }
 
     public static Options analyze(String[] args) {
-        Pattern pattern = Pattern.compile(OPTIONS_PATTERN);
-        Matcher matcher = pattern.matcher(String.join(" ", args));
-        boolean isShort = false;
-        boolean isFull = false;
-        boolean needAppend = false;
-        String prefix = "";
-        String pathToFile = "";
-        List<String> filesToRead = new ArrayList<>();
+        String parametersLine = String.join(" ", args);
+        Matcher matcher = pattern.matcher(parametersLine);
+        Options options = Options.defaultOptions();
 
         while (true) {
             try {
                 while (matcher.find()) {
                     String match = matcher.group();
                     if ("-s".equals(match)) {
-                        isShort = true;
+                        options.setShort(true);
                     } else if ("-f".equals(match)) {
-                        isFull = true;
+                        options.setFull(true);
                     } else if ("-a".equals(match)) {
-                        needAppend = true;
+                        options.setNeedAppend(true);
                     } else if (match.startsWith("-p ")) {
-                        prefix = matcher.group("prefix");
+                        String prefix = matcher.group("prefix");
+                        options.setPrefix(prefix);
                     } else if (match.startsWith("-o ")) {
-                        pathToFile = matcher.group("path");
+                        String pathToResult = matcher.group("path");
+                        options.setPathToResult(pathToResult);
                     } else if (match.endsWith(".txt")) {
-                        filesToRead.add(matcher.group("filename"));
+                        String fileName = matcher.group("filename");
+                        options.addFileToRead(fileName);
                     } else {
                         throw new UnknownParameterException("Unknown parameter: " + match);
                     }
                 }
             } catch (RuntimeException exception) {
-                printErrorMessage(exception.getMessage());
-                Scanner scanner = new Scanner(System.in);
-                String userInput = scanner.nextLine();
-                matcher.reset();
-                matcher = pattern.matcher(userInput);
+                System.out.println(exception.getMessage());
+                matcher = changeParametersMatcher();
                 continue;
             }
             break;
         }
-        return buildOptions(isShort, isFull, needAppend, prefix, pathToFile, filesToRead);
+        return options;
     }
 
-    private static void printErrorMessage(String errorMessage) {
-        System.out.println(errorMessage);
+    private static Matcher changeParametersMatcher() {
+        printErrorMessage();
+        Scanner scanner = new Scanner(System.in);
+        String newCommandLine = scanner.nextLine();
+        return pattern.matcher(newCommandLine);
+    }
+
+    private static void printErrorMessage() {
         System.out.println("""
                 The following parameters apply:
                 -s : to display short statistics
@@ -76,17 +76,5 @@ public class OptionsAnalyzer {
                 -o <path> : specifies the path to the location of the resulting files
                 file1.txt file2.txt <more> : list text files which need to read and sort data
                 """);
-    }
-
-    private static Options buildOptions(boolean isShort, boolean isFull, boolean needAppend, String prefix,
-                                        String pathToFile, List<String> filesToRead) {
-        return Options.builder()
-                      .isShort(isShort)
-                      .isFull(isFull)
-                      .needAppend(needAppend)
-                      .prefix(prefix)
-                      .pathToFile(pathToFile)
-                      .filesToRead(filesToRead)
-                      .build();
     }
 }
